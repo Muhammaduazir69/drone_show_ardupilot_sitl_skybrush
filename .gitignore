@@ -1,0 +1,47 @@
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Claude Code
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Logs (runtime generated)
+logs/*.log
+logs/mavproxy_*
+logs/preflight_report.json
+logs/*_pids.txt
+
+# SITL artifacts
+*.tlog
+*.tlog.raw
+*.bin
+*.BIN
+eeprom.bin
+mav.parm
+mav.tlog
+
+# Fleet params (auto-generated, can be regenerated)
+config/fleet_params/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace

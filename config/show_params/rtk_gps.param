@@ -1,0 +1,37 @@
+# ============================================================
+# RTK GPS Configuration for Drone Show
+# High-precision positioning for synchronized flight
+# ============================================================
+
+# ---- Primary GPS: RTK-capable ----
+GPS_TYPE,1
+GPS_AUTO_CONFIG,1
+GPS_RATE_MS,200
+
+# ---- RTK Injection Settings ----
+# Inject corrections to all GPS modules
+GPS_INJECT_TO,127
+
+# ---- GPS Navigation Filter ----
+# 0 = Portable (best for drone show)
+GPS_NAVFILTER,0
+
+# ---- Minimum GPS Satellites ----
+GPS_MIN_DGPS,100
+GPS_MIN_ELEV,-100
+
+# ---- GPS Blending (if dual GPS) ----
+GPS_AUTO_SWITCH,1
+GPS_BLEND_MASK,5
+
+# ---- EKF GPS Settings for RTK ----
+EK3_GPS_TYPE,0
+EK3_POSNE_M_NSE,0.3
+EK3_ALT_M_NSE,1.5
+EK3_VELD_M_NSE,0.5
+EK3_VELNE_M_NSE,0.3
+
+# ---- RTK Base Station ----
+# Configure via MAVLink GPS_INJECT messages
+# Base station coordinates set during field setup
+# Typical RTK accuracy: 2cm horizontal, 3cm vertical

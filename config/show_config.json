@@ -1,0 +1,36 @@
+{
+    "show_name": "Demo Drone Show - 3 Drones",
+    "num_drones": 3,
+    "base_port": 5760,
+    "takeoff_altitude": 10.0,
+    "show_altitude": 20.0,
+    "max_speed": 5.0,
+    "safety_distance": 3.0,
+    "geofence_radius": 300,
+    "geofence_alt_max": 120,
+    "rtl_altitude": 15.0,
+    "connection_timeout": 30,
+    "heartbeat_timeout": 5.0,
+    "preflight_checks": true,
+    "base_lat": 47.397742,
+    "base_lon": 8.545594,
+    "base_alt": 488.0,
+    "min_battery_voltage": 14.0,
+    "min_gps_satellites": 8,
+    "drone_spacing_meters": 5.5,
+    "led_enabled": true,
+    "rtk_enabled": false,
+    "rtk_base_station": {
+        "lat": 47.397742,
+        "lon": 8.545594,
+        "alt": 488.0,
+        "port": "/dev/ttyUSB0",
+        "baud": 115200
+    },
+    "skybrush": {
+        "enabled": true,
+        "server_host": "127.0.0.1",
+        "server_port": 5000,
+        "ws_port": 5001
+    }
+}

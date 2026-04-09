@@ -1,0 +1,49 @@
+# ============================================================
+# Safety Parameters for Drone Show Operations
+# Critical failsafe and safety configuration
+# ============================================================
+
+# ---- Failsafe: Throttle ----
+FS_THR_ENABLE,1
+FS_THR_VALUE,975
+
+# ---- Failsafe: GCS Connection Loss ----
+# Action: SmartRTL/RTL on GCS loss
+FS_GCS_ENABLE,2
+
+# ---- Failsafe: EKF/IMU ----
+FS_EKF_ACTION,1
+FS_EKF_THRESH,0.8
+
+# ---- Failsafe: Crash Detection ----
+FS_CRASH_CHECK,1
+
+# ---- Battery Failsafe ----
+BATT_FS_LOW_ACT,2
+BATT_FS_CRT_ACT,1
+BATT_LOW_VOLT,14.0
+BATT_CRT_VOLT,13.2
+BATT_LOW_MAH,1000
+BATT_CRT_MAH,500
+
+# ---- Arming Safety ----
+ARMING_CHECK,1
+ARMING_REQUIRE,1
+ARMING_MIS_ITEMS,0
+
+# ---- Motor Emergency Stop ----
+# Channel 8 for emergency motor kill
+RC8_OPTION,31
+
+# ---- Pre-arm Checks ----
+# All checks enabled (bitmask = 1 = all)
+ARMING_CHECK,1
+
+# ---- Vibration Monitoring ----
+INS_ACCEL_FILTER,20
+INS_GYRO_FILTER,20
+
+# ---- Land Detector ----
+LAND_SPEED,50
+LAND_ALT_LOW,1000
+LAND_REPOSITION,1

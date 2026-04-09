@@ -1,0 +1,29 @@
+# ============================================================
+# Geofence Parameters for Drone Show
+# Defines the operational boundaries for the show area
+# ============================================================
+
+# Enable geofence with altitude + circle + polygon
+FENCE_ENABLE,1
+FENCE_TYPE,7
+
+# Action: RTL on breach
+FENCE_ACTION,1
+
+# Maximum altitude: 120m AGL (typical regulatory limit)
+FENCE_ALT_MAX,120
+
+# Minimum altitude: -5m (ground safety margin)
+FENCE_ALT_MIN,-5
+
+# Circular geofence radius: 300m from home
+FENCE_RADIUS,300
+
+# Margin before triggering: 2m
+FENCE_MARGIN,2
+
+# Return to nearest rally point on breach
+FENCE_RET_RALLY,0
+
+# Total fence points (set based on polygon)
+FENCE_TOTAL,0

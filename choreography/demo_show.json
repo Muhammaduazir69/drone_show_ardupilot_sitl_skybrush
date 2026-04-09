@@ -1,0 +1,246 @@
+{
+    "show_name": "Demo Formation Show",
+    "description": "3-drone demo show with triangle, line, and circle formations",
+    "total_duration": 180,
+    "base_lat": 47.397742,
+    "base_lon": 8.545594,
+    "segments": [
+        {
+            "name": "Formation: Triangle",
+            "duration": 30,
+            "description": "Form an equilateral triangle at 15m altitude",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397792,
+                        "lon": 8.545594,
+                        "alt": 15.0,
+                        "speed": 2.0,
+                        "yaw": 180,
+                        "led_color": [255, 0, 0],
+                        "hold_time": 5
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397717,
+                        "lon": 8.545494,
+                        "alt": 15.0,
+                        "speed": 2.0,
+                        "yaw": 60,
+                        "led_color": [0, 255, 0],
+                        "hold_time": 5
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397717,
+                        "lon": 8.545694,
+                        "alt": 15.0,
+                        "speed": 2.0,
+                        "yaw": 300,
+                        "led_color": [0, 0, 255],
+                        "hold_time": 5
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Transition: Rise",
+            "duration": 15,
+            "description": "All drones rise to 25m",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397792,
+                        "lon": 8.545594,
+                        "alt": 25.0,
+                        "speed": 1.5,
+                        "yaw": 0,
+                        "led_color": [255, 255, 0]
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397717,
+                        "lon": 8.545494,
+                        "alt": 25.0,
+                        "speed": 1.5,
+                        "yaw": 0,
+                        "led_color": [255, 255, 0]
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397717,
+                        "lon": 8.545694,
+                        "alt": 25.0,
+                        "speed": 1.5,
+                        "yaw": 0,
+                        "led_color": [255, 255, 0]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Formation: Line",
+            "duration": 30,
+            "description": "Form a horizontal line at 25m altitude",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545494,
+                        "alt": 25.0,
+                        "speed": 2.0,
+                        "yaw": 90,
+                        "led_color": [255, 0, 255],
+                        "hold_time": 10
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545594,
+                        "alt": 25.0,
+                        "speed": 2.0,
+                        "yaw": 90,
+                        "led_color": [0, 255, 255],
+                        "hold_time": 10
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545694,
+                        "alt": 25.0,
+                        "speed": 2.0,
+                        "yaw": 90,
+                        "led_color": [255, 255, 0],
+                        "hold_time": 10
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Formation: Vertical Stack",
+            "duration": 30,
+            "description": "Stack drones vertically at different altitudes",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545594,
+                        "alt": 15.0,
+                        "speed": 2.0,
+                        "yaw": 0,
+                        "led_color": [255, 0, 0],
+                        "hold_time": 10
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545594,
+                        "alt": 25.0,
+                        "speed": 2.0,
+                        "yaw": 0,
+                        "led_color": [0, 255, 0],
+                        "hold_time": 10
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545594,
+                        "alt": 35.0,
+                        "speed": 2.0,
+                        "yaw": 0,
+                        "led_color": [0, 0, 255],
+                        "hold_time": 10
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Formation: Expanding Triangle",
+            "duration": 30,
+            "description": "Large triangle formation at 20m",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397842,
+                        "lon": 8.545594,
+                        "alt": 20.0,
+                        "speed": 3.0,
+                        "yaw": 180,
+                        "led_color": [255, 255, 255],
+                        "hold_time": 10
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397692,
+                        "lon": 8.545394,
+                        "alt": 20.0,
+                        "speed": 3.0,
+                        "yaw": 60,
+                        "led_color": [255, 255, 255],
+                        "hold_time": 10
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397692,
+                        "lon": 8.545794,
+                        "alt": 20.0,
+                        "speed": 3.0,
+                        "yaw": 300,
+                        "led_color": [255, 255, 255],
+                        "hold_time": 10
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Finale: Converge and Descend",
+            "duration": 25,
+            "description": "All drones converge to center and descend",
+            "waypoints": {
+                "1": [
+                    {
+                        "lat": 47.397752,
+                        "lon": 8.545584,
+                        "alt": 10.0,
+                        "speed": 1.5,
+                        "yaw": 0,
+                        "led_color": [255, 128, 0],
+                        "hold_time": 5
+                    }
+                ],
+                "2": [
+                    {
+                        "lat": 47.397742,
+                        "lon": 8.545594,
+                        "alt": 10.0,
+                        "speed": 1.5,
+                        "yaw": 120,
+                        "led_color": [128, 0, 255],
+                        "hold_time": 5
+                    }
+                ],
+                "3": [
+                    {
+                        "lat": 47.397732,
+                        "lon": 8.545604,
+                        "alt": 10.0,
+                        "speed": 1.5,
+                        "yaw": 240,
+                        "led_color": [0, 255, 128],
+                        "hold_time": 5
+                    }
+                ]
+            }
+        }
+    ]
+}

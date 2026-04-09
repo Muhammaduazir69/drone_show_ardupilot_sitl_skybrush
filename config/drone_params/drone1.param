@@ -1,0 +1,11 @@
+# ============================================================
+# Drone 1 - Individual Parameters
+# Unique identification and position offset
+# ============================================================
+
+# System ID - unique per drone
+SYSID_THISMAV,1
+
+# LED Color (for identification) - Red
+NTF_LED_OVERRIDE,0
+SIM_LED_LAYOUT,0

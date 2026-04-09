@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Show Control Center</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0e17;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1f35, #0d1225);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a3050;
+        }
+        .header h1 {
+            font-size: 1.4em;
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .header .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-idle { background: #2a3050; color: #8899aa; }
+        .status-preflight { background: #3a2a00; color: #ffaa00; }
+        .status-arming { background: #3a2a00; color: #ffaa00; }
+        .status-takeoff { background: #002a3a; color: #00aaff; }
+        .status-show { background: #003a00; color: #00ff44; }
+        .status-rtl { background: #2a2a00; color: #ffff00; }
+        .status-emergency { background: #3a0000; color: #ff0044; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 50% { opacity: 0.5; } }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .drone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .drone-card {
+            background: #141a2e;
+            border: 1px solid #2a3050;
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.3s;
+        }
+        .drone-card.connected { border-color: #00aa44; }
+        .drone-card.armed { border-color: #00aaff; }
+        .drone-card.error { border-color: #ff0044; }
+        .drone-card .drone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .drone-card .drone-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        .drone-card .drone-state {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .state-connected { background: #1a3a2a; color: #44cc77; }
+        .state-armed { background: #1a2a3a; color: #44aaff; }
+        .state-performing { background: #1a3a1a; color: #44ff44; }
+        .state-error { background: #3a1a1a; color: #ff4444; }
+        .state-disconnected { background: #2a2a2a; color: #666; }
+
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        .telemetry-item {
+            background: #0d1225;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+        .telemetry-item .label {
+            color: #667;
+            font-size: 0.75em;
+            text-transform: uppercase;
+        }
+        .telemetry-item .value {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #fff;
+        }
+        .battery-bar {
+            width: 100%;
+            height: 6px;
+            background: #1a1f35;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .battery-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s, background-color 0.5s;
+        }
+
+        .control-panel {
+            background: #141a2e;
+            border: 1px solid #2a3050;
+            border-radius: 12px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+        .control-panel h2 {
+            font-size: 1.1em;
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+        .btn:active { transform: translateY(0); }
+        .btn-connect { background: #1a3a2a; color: #44cc77; }
+        .btn-preflight { background: #2a2a00; color: #ccaa00; }
+        .btn-arm { background: #1a2a3a; color: #44aaff; }
+        .btn-takeoff { background: #1a3a1a; color: #44ff44; }
+        .btn-show { background: linear-gradient(135deg, #00aa44, #0088ff); color: #fff; }
+        .btn-rtl { background: #3a3a00; color: #ffff44; }
+        .btn-land { background: #3a2a00; color: #ffaa44; }
+        .btn-emergency {
+            background: linear-gradient(135deg, #ff0044, #cc0000);
+            color: #fff;
+            font-size: 1.1em;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .btn-load { background: #2a1a3a; color: #aa66ff; }
+
+        .log-panel {
+            background: #141a2e;
+            border: 1px solid #2a3050;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        .log-panel h3 {
+            font-size: 0.9em;
+            color: #667;
+            margin-bottom: 10px;
+        }
+        .log-entry {
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.75em;
+            padding: 3px 0;
+            border-bottom: 1px solid #1a1f35;
+        }
+        .log-info { color: #44aaff; }
+        .log-success { color: #44cc77; }
+        .log-warning { color: #ffaa44; }
+        .log-error { color: #ff4444; }
+
+        .show-timer {
+            text-align: center;
+            font-size: 2em;
+            font-weight: 700;
+            color: #00d4ff;
+            margin: 15px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .connection-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .connected-dot { background: #44cc77; box-shadow: 0 0 6px #44cc77; }
+        .disconnected-dot { background: #ff4444; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <span class="connection-indicator disconnected-dot" id="wsIndicator"></span>
+            Drone Show Control Center
+        </h1>
+        <div>
+            <span class="status-badge status-idle" id="showPhase">IDLE</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div>
+            <div class="drone-grid" id="droneGrid">
+                <div class="drone-card">
+                    <p style="color: #667; text-align: center; padding: 30px;">
+                        No drones connected. Click "Connect Drones" to begin.
+                    </p>
+                </div>
+            </div>
+            <div class="log-panel">
+                <h3>Event Log</h3>
+                <div id="logEntries"></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="control-panel">
+                <h2>Show Controls</h2>
+                <div class="show-timer" id="showTimer">00:00</div>
+                <div class="btn-group">
+                    <button class="btn btn-connect" onclick="connectDrones()">Connect Drones</button>
+                    <button class="btn btn-preflight" onclick="runPreflight()">Preflight Check</button>
+                    <button class="btn btn-load" onclick="loadShow()">Load Show</button>
+                    <button class="btn btn-arm" onclick="armAll()">Arm All</button>
+                    <button class="btn btn-takeoff" onclick="takeoffAll()">Takeoff</button>
+                    <button class="btn btn-show" onclick="startShow()">START SHOW</button>
+                    <button class="btn btn-rtl" onclick="rtlAll()">Return to Launch</button>
+                    <button class="btn btn-land" onclick="landAll()">Land All</button>
+                    <button class="btn btn-emergency" onclick="emergencyStop()">EMERGENCY STOP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api';
+        const WS_URL = `ws://${window.location.host}/ws`;
+        let ws = null;
+        let showStartTime = null;
+        let timerInterval = null;
+
+        function log(msg, level = 'info') {
+            const el = document.getElementById('logEntries');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${level}`;
+            entry.textContent = `[${time}] ${msg}`;
+            el.insertBefore(entry, el.firstChild);
+            if (el.children.length > 100) el.removeChild(el.lastChild);
+        }
+
+        function connectWebSocket() {
+            ws = new WebSocket(WS_URL);
+            ws.onopen = () => {
+                document.getElementById('wsIndicator').className = 'connection-indicator connected-dot';
+                log('WebSocket connected', 'success');
+            };
+            ws.onclose = () => {
+                document.getElementById('wsIndicator').className = 'connection-indicator disconnected-dot';
+                log('WebSocket disconnected', 'warning');
+                setTimeout(connectWebSocket, 3000);
+            };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateDashboard(data);
+            };
+        }
+
+        function updateDashboard(data) {
+            updateShowPhase(data.show_phase);
+            updateDroneCards(data.drones);
+        }
+
+        function updateShowPhase(phase) {
+            const el = document.getElementById('showPhase');
+            el.textContent = phase.toUpperCase();
+            el.className = `status-badge status-${phase}`;
+        }
+
+        function updateDroneCards(drones) {
+            const grid = document.getElementById('droneGrid');
+            if (!drones || Object.keys(drones).length === 0) return;
+
+            grid.innerHTML = '';
+            for (const [id, drone] of Object.entries(drones)) {
+                const card = document.createElement('div');
+                const stateClass = drone.armed ? 'armed' : (drone.alive ? 'connected' : 'error');
+                card.className = `drone-card ${stateClass}`;
+
+                const batteryColor = drone.battery_remaining > 50 ? '#44cc77' :
+                    drone.battery_remaining > 20 ? '#ffaa44' : '#ff4444';
+                const batteryWidth = Math.max(0, Math.min(100, drone.battery_remaining));
+
+                card.innerHTML = `
+                    <div class="drone-header">
+                        <span class="drone-name">Drone ${id}</span>
+                        <span class="drone-state state-${drone.state}">${drone.state}</span>
+                    </div>
+                    <div class="telemetry-grid">
+                        <div class="telemetry-item">
+                            <div class="label">Mode</div>
+                            <div class="value">${drone.mode || 'N/A'}</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="label">GPS</div>
+                            <div class="value">${drone.gps_satellites || 0} sats (Fix: ${drone.gps_fix || 0})</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="label">Altitude</div>
+                            <div class="value">${(drone.alt || 0).toFixed(1)} m</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="label">Speed</div>
+                            <div class="value">${(drone.groundspeed || 0).toFixed(1)} m/s</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="label">Battery</div>
+                            <div class="value">${(drone.battery_voltage || 0).toFixed(1)}V</div>
+                        </div>
+                        <div class="telemetry-item">
+                            <div class="label">Heading</div>
+                            <div class="value">${(drone.heading || 0).toFixed(0)}&deg;</div>
+                        </div>
+                    </div>
+                    <div class="battery-bar">
+                        <div class="fill" style="width: ${batteryWidth}%; background: ${batteryColor};"></div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            try {
+                const opts = { method, headers: { 'Content-Type': 'application/json' } };
+                if (body) opts.body = JSON.stringify(body);
+                const res = await fetch(API_BASE + endpoint, opts);
+                const data = await res.json();
+                return data;
+            } catch (e) {
+                log(`API Error: ${e.message}`, 'error');
+                return null;
+            }
+        }
+
+        async function connectDrones() {
+            log('Connecting to drones...');
+            const result = await apiCall('/connect', 'POST', { num_drones: 3 });
+            if (result) {
+                log(`Connected ${result.connected}/${result.total} drones`,
+                    result.success ? 'success' : 'warning');
+            }
+        }
+
+        async function runPreflight() {
+            log('Running preflight checks...');
+            const result = await apiCall('/preflight', 'POST');
+            if (result) {
+                for (const [id, check] of Object.entries(result)) {
+                    log(`Drone ${id}: ${check.passed ? 'PASS' : 'FAIL'}`,
+                        check.passed ? 'success' : 'warning');
+                }
+            }
+        }
+
+        async function loadShow() {
+            log('Loading show choreography...');
+            const result = await apiCall('/show/load', 'POST', {});
+            if (result && result.success) {
+                log(`Show loaded: ${result.segments} segments`, 'success');
+            }
+        }
+
+        async function armAll() {
+            log('Arming all drones...');
+            const result = await apiCall('/arm', 'POST');
+            if (result) log(result.success ? 'All drones armed' : 'Arming failed',
+                result.success ? 'success' : 'error');
+        }
+
+        async function takeoffAll() {
+            log('Takeoff initiated...');
+            const result = await apiCall('/takeoff', 'POST', { altitude: 10 });
+            if (result) log(result.success ? 'Takeoff successful' : 'Takeoff failed',
+                result.success ? 'success' : 'error');
+        }
+
+        async function startShow() {
+            log('Starting drone show!', 'success');
+            showStartTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            const result = await apiCall('/show/start', 'POST');
+            if (result) log('Show started', 'success');
+        }
+
+        async function rtlAll() {
+            log('Returning all drones to launch...', 'warning');
+            clearInterval(timerInterval);
+            await apiCall('/rtl', 'POST');
+        }
+
+        async function landAll() {
+            log('Landing all drones...', 'warning');
+            clearInterval(timerInterval);
+            await apiCall('/land', 'POST');
+        }
+
+        async function emergencyStop() {
+            if (!confirm('EMERGENCY STOP - Land all drones immediately?')) return;
+            log('EMERGENCY STOP ACTIVATED', 'error');
+            clearInterval(timerInterval);
+            await apiCall('/emergency', 'POST');
+        }
+
+        function updateTimer() {
+            if (!showStartTime) return;
+            const elapsed = Math.floor((Date.now() - showStartTime) / 1000);
+            const mins = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const secs = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('showTimer').textContent = `${mins}:${secs}`;
+        }
+
+        // Initialize
+        connectWebSocket();
+        log('Dashboard initialized', 'info');
+
+        // Poll status as fallback
+        setInterval(async () => {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                const status = await apiCall('/status');
+                if (status) updateDashboard(status);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
