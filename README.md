@@ -8,6 +8,14 @@ A complete drone show orchestration system built on ArduPilot with Skybrush-comp
 
 ---
 
+## Demo Video
+
+[![Drone Show 3D Visualization Demo](https://img.shields.io/badge/Watch%20Demo-Google%20Drive-blue?style=for-the-badge&logo=googledrive)](https://drive.google.com/file/d/1zMQdsiwkGdwgGaSi0yXbzXsSpRS7KGAZ/view?usp=sharing)
+
+**[Watch the full demo video here](https://drive.google.com/file/d/1zMQdsiwkGdwgGaSi0yXbzXsSpRS7KGAZ/view?usp=sharing)** — Real-time 3D visualization showing 3 drones performing synchronized formations (Triangle, Line, Vertical Stack), live telemetry (GPS, battery, altitude, speed), Skybrush bridge integration, and the complete show workflow from preflight checks through choreography execution to RTL landing.
+
+---
+
 ## Features
 
 - **Full ArduPilot SITL Simulation** — Enhanced simulator with complete sensor emulation (GPS 3D fix, 14 satellites, battery model, EKF status, MAVLink telemetry)
